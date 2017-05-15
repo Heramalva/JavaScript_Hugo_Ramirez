@@ -1,72 +1,219 @@
-var Calculadora = (function(){
-    var Constructor = function(nuevoValor){
-        this.valor = nuevoValor || 0;
-        this.display = document.getElementById('display');
-        var obtenerIdDelElemento = function(e){
-            e = e || window.event;
-            var target = e.target || e.srcElement;
-            return document.getElementById(target.id);
-        };
-        var validarParametro = function(parametro){
-            return !isNaN(parseFloat(parametro) && isFinite(parametro));
-        };
-        this.teclaPresionada = function(e){
-            var teclaSeleccionda = obtenerIdDelElemento(e);
-            if(validarParametro(teclaSeleccionda.id)){
-                display.innerHTML = display.innerHTML + teclaSeleccionda.id;
-            }
-            teclaSeleccionda.style.padding = '2px';
-        };
-        this.NotTeclaPresionada = function(e){
-            var teclaSeleccionda = obtenerIdDelElemento(e);
-            teclaSeleccionda.style.padding = '0px';
-        };
-    }
-    Constructor.prototype.obtenerValor= function(){
-        return this.valor;
-    };
-    Constructor.prototype.sumar = function(){
-        if(this.validarParametro(sumando)){
-            this.valor += sumando;
-            this.display.innerHTML = this.valor.toString();
-            return this.valor;
-        }
-    };
-    Constructor.prototype.restar = function(sustraendo){
-        if(this.validarParametro(sustraendo)){
-            this.valor -= sustraendo;
-            this.display.innerHTML = this.valor.toString();
-            return this.valor;
-        }
-    };
-    Constructor.prototype.multiplicar = function(factor){
-        if(this.validarParametro(factor)){
-            this.valor *= factor;
-            this.display.innerHTML = this.valor.toString();
-            return this.valor;
-        }
-    };
-    Constructor.prototype.division = function(divisor){
-        if(this.validarParametro(divisor)){
-            this.valor /= divisor;
-            this.display.innerHTML = this.valor.toString();
-            return this.valor;
-        }
-    }
+var Calculadora = {
 
-    return Constructor;
-})();
+	/* Declaración de variables*/
 
-var miCalculadora = new Calculadora();
+	pantalla: document.getElementById("display").innerHTML,
+	decimal: 0,
+	signo: 0,
+	controlen: 8,
+	stop: 0,
+	num1: 0,
+	opcion: 0,
+	auxnum: 0,
+	auxestado: 0,
+	auxresultado: 0,
+	inicio: (
+		function(){
+			this.EventosClick();
+		}
+	),
 
-var elementoTeclado = document.querySelector('.teclado');
-var elementoDisplay = document.getElementById('display');
+	/*botones animados*/
+	animboton: function(tecla){
+		document.getElementById(tecla).style.transform="scale(0.9)";
+		setTimeout(function() {document.getElementById(tecla).style.transform="scale(1)";}, 200);
+	},
 
-// Capturamos el elemento al que damos click...
-elementoTeclado.addEventListener('mousedown', miCalculadora.teclaPresionada, false);
-// Restauramos cuando damos click...
-elementoTeclado.addEventListener('mouseup', miCalculadora.NotTeclaPresionada, false);
+	/*resta*/
+		menos: function(){
+		  this.animacionuno("menos");
+			this.num1 = Number(this.pantalla);
+			this.pantalla = "",
+			this.opcion = 2,
+			this.auxestado = 0,
+			this.signo = 0,
+			this.auxnum = 0,
+			this.auxestado = 0,
+			this.decimal = 0,
+			this.viewdisplay();
+	},
 
-elementoTeclado.addEventListener('change', function(e){
+	/*multiplicacion*/
+		por: function(){
+		  this.animacionuno("por");
+			this.num1 = Number(this.pantalla),
+			this.pantalla = "",
+			this.opcion = 3,
+			this.auxestado = 0,
+			this.signo = 0,
+			this.auxnum = 0,
+			this.auxestado = 0,
+			this.decimal = 0,
+			this.viewdisplay();
+	},
 
-});
+	/*division*/
+		dividido: function(){
+	    this.animacionuno("dividido");
+			this.num1 = Number(this.pantalla),
+			this.pantalla = "",
+			this.opcion = 4,
+			this.auxestado = 0,
+			this.signo = 0,
+			this.auxnum = 0,
+			this.auxestado = 0,
+			this.decimal = 0,
+			this.viewdisplay();
+	},
+
+	/*funcion sumar*/
+	mas: function(){
+	    this.animacionuno("mas");
+			this.num1 += Number(this.pantalla),
+			this.pantalla = "",
+			this.opcion = 1,
+			this.auxestado = 0,
+			this.signo = 0,
+			this.auxnum = 0,
+			this.auxestado = 0,
+			this.decimal = 0,
+			this.viewdisplay();
+	},
+	/*función igual*/
+	igual: function(){
+		this.animacionuno("igual");
+		switch(this.opcion){
+			case 1:
+					if(this.auxestado == 0){
+						this.auxnum = Number(this.pantalla),
+						this.pantalla = this.num1 + Number(this.pantalla),
+						this.auxestado = 1,
+						this.num1 = 0;
+					}else{
+						this.pantalla = Number(this.pantalla)+this.auxnum;
+					}
+				break;
+			case 2:
+					if(this.auxestado == 0){
+						this.auxnum = Number(this.pantalla),
+						this.pantalla = this.num1 - Number(this.pantalla),
+						this.auxestado = 1,
+						this.num1 = 0;
+					}else{
+						this.pantalla = Number(this.pantalla)-this.auxnum;
+					}
+				break;
+			case 3:
+					if(this.auxestado == 0){
+						this.auxnum = Number(this.pantalla),
+						this.pantalla = this.num1 * Number(this.pantalla),
+						this.auxestado = 1,
+						this.num1 = 0;
+					}else{
+						this.pantalla = Number(this.pantalla)*this.auxnum;
+					}
+				break;
+			case 4:
+					if(this.auxestado == 0){
+						this.auxnum = Number(this.pantalla),
+						this.pantalla = this.num1 / Number(this.pantalla),
+						this.auxestado = 1,
+						this.num1 = 0;
+					}else{
+						this.pantalla = Number(this.pantalla)/this.auxnum;
+					}
+				break;
+			default:
+				break;
+		}
+		this.viewdisplay();
+	},
+	/* Se asignan teclas */
+	EventosClick: function(){
+		document.getElementById("0").addEventListener("click",function(){Calculadora.viewnum("0")});
+		document.getElementById("1").addEventListener("click",function(){Calculadora.viewnum("1")});
+		document.getElementById("2").addEventListener("click",function(){Calculadora.viewnum("2")});
+		document.getElementById("3").addEventListener("click",function(){Calculadora.viewnum("3")});
+		document.getElementById("4").addEventListener("click",function(){Calculadora.viewnum("4")});
+		document.getElementById("5").addEventListener("click",function(){Calculadora.viewnum("5")});
+		document.getElementById("6").addEventListener("click",function(){Calculadora.viewnum("6")});
+		document.getElementById("7").addEventListener("click",function(){Calculadora.viewnum("7")});
+		document.getElementById("8").addEventListener("click",function(){Calculadora.viewnum("8")});
+		document.getElementById("9").addEventListener("click",function(){Calculadora.viewnum("9")});
+		document.getElementById("on").addEventListener("click",function(){Calculadora.on("")});
+		document.getElementById("sign").addEventListener("click",function(){Calculadora.sign()});
+		document.getElementById("dividido").addEventListener("click",function(){Calculadora.dividido()});
+		document.getElementById("menos").addEventListener("click",function(){Calculadora.menos()});
+		document.getElementById("punto").addEventListener("click",function(){Calculadora.punto()});
+		document.getElementById("igual").addEventListener("click",function(){Calculadora.igual()});
+		document.getElementById("mas").addEventListener("click",function(){Calculadora.mas()});
+		document.getElementById("por").addEventListener("click",function(){Calculadora.por()});
+	},
+	/* función vision de calculadora*/
+	viewnum: function(valor){
+		this.animacionuno(valor);
+		if(this.signo == 1 && this.stop == 0){
+			this.controlen += 1,
+			this.stop = 1;
+		}
+		if(this.decimal == 1  && this.stop == 0){
+			this.controlen += 1,
+			this.stop = 1;
+		}
+		if(this.pantalla.length < this.controlen){
+			if(this.pantalla != "0"){
+				this.pantalla += valor;
+			}else if(valor != 0){
+				this.pantalla = "",
+				this.pantalla += valor;
+			}
+			this.viewdisplay();
+		}
+	},
+	/* funcion limpieza*/
+	on: function(){
+		this.animacionuno("on");
+		this.pantalla = "0",
+		this.decimal = 0,
+		this.signo = 0,
+		this.stop = 0,
+		this.controlen = 8
+		this.num1 = 0,
+		this.auxestado = 0,
+		this.auxnum = 0,
+		this.opcion = 0,
+		this.auxresultado = 0,
+		this.viewdisplay();
+	},
+	/* función estado negativo o positivo*/
+	sign: function(){
+		this.animacionuno("sign");
+		if(this.pantalla != 0){
+			if(this.signo == 0){
+				this.pantalla = "-" + this.pantalla,
+				this.signo = 1;
+			}else{
+				this.pantalla = this.pantalla.slice(1);
+				this.signo = 0;
+			}
+		}
+		this.viewdisplay();
+	},
+	/*función decimal*/
+	punto: function(){
+		this.animacionuno("punto");
+		if(this.decimal == 0){
+			this.pantalla += ".";
+		}
+		this.decimal = 1,
+		this.viewdisplay();
+	},
+	/*imprime en pantalla*/
+	viewdisplay: function(){
+		if(this.pantalla.toString().length > this.controlen){
+			this.pantalla = this.pantalla.toString().substring(0,8);
+		}
+		document.getElementById("display").innerHTML = this.pantalla;
+	}
+}
+Calculadora.inicio();
